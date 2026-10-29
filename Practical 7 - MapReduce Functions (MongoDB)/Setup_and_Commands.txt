@@ -1,0 +1,48 @@
+Practical 7 — MapReduce Functions (MongoDB)
+===========================================
+
+INSTALLATION & SETUP
+Download MongoDB Community Server and Mongosh if not already downloaded (refer to Practical 4.1).
+Open PowerShell and run: mongosh
+
+COMMANDS / QUERIES
+
+Query 1 — Select Survey Database
+use surveyDB
+
+Query 2 — Insert Survey Responses
+db.respondents.insertMany ([
+{ name: "Aarav", gender: "M", city: "Mumbai" },
+{ name: "Simran", gender: "F", city: "Delhi" },
+{ name: "Rohit", gender: "M", city: "Delhi" },
+{ name: "Neha", gender: "F", city: "Pune" },
+{ name: "Kiran", gender: "M", city: "Pune" },
+{ name: "Pooja", gender: "F", city: "Mumbai" },
+{ name: "Rahul", gender: "M", city: "Mumbai" },
+{ name: "Aisha", gender: "F", city: "Mumbai" },
+{ name: "Vikas", gender: "M", city: "Delhi" },
+{ name: "Meena", gender: "F", city: "Delhi" },
+{ name: "Suresh", gender: "M", city: "Pune" },
+{ name: "Sneha", gender: "F", city: "Pune" },
+{ name: "Aditya", gender: "M", city: "Nagpur" },
+{ name: "Priya", gender: "F", city: "Nagpur" },
+{ name: "Manoj", gender: "M", city: "Pune" },
+{ name: "Riya", gender: "F", city: "Delhi" },
+{ name: "Amit", gender: "M", city: "Mumbai" },
+{ name: "Shreya", gender: "F", city: "Pune" }
+])
+
+Query 3 — Preview First Five
+db.respondents.find().limit(5).pretty()
+
+Query 4 — Define Map Function
+var mapFunction = function() { emit({ city: this.city, gender: this.gender }, 1); };
+
+Query 5 — Define Reduce Function
+var reduceFunction = function(key, values) { return Array.sum(values); };
+
+Query 6 — Run MapReduce Job
+db.respondents.mapReduce( mapFunction, reduceFunction, { out: "city_gender_count" } )
+
+Query 7 — View Aggregated Results
+db.city_gender_count.find().pretty()

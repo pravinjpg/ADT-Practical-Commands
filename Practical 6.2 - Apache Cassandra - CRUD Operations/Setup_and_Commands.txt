@@ -1,0 +1,87 @@
+Practical 6.2 — Apache Cassandra - CRUD Operations
+==================================================
+
+INSTALLATION & SETUP
+Install Docker Desktop (as in Practical 6.1) and restart the system.
+
+Open PowerShell as Administrator and start the Cassandra container:
+docker run -d --name cassandra -p 9042:9042 cassandra
+
+Check the status:
+docker ps
+
+Open the CQL shell:
+docker exec -it cassandra cqlsh
+
+COMMANDS / QUERIES
+
+Query 1 — Create Keyspace
+CREATE KEYSPACE mydb WITH replication = {'class':'SimpleStrategy', 'replication_factor':1};
+
+Query 2 — Select Keyspace
+USE mydb;
+
+Query 3 — Create Student Table
+CREATE TABLE students ( id int PRIMARY KEY, name text, age int, grade text, city text );
+
+Query 4 — Insert Student Records
+INSERT INTO students (id, name, age, grade, city) VALUES (1, 'Aarav', 21, 'A', 'Mumbai');
+INSERT INTO students (id, name, age, grade, city) VALUES (2, 'Siddhesh', 22, 'B', 'Pune');
+INSERT INTO students (id, name, age, grade, city) VALUES (3, 'Sneha', 23, 'A', 'Delhi');
+INSERT INTO students (id, name, age, grade, city) VALUES (4, 'Ravi', 21, 'C', 'Nashik');
+INSERT INTO students (id, name, age, grade, city) VALUES (5, 'Kiran', 22, 'B', 'Nagpur');
+INSERT INTO students (id, name, age, grade, city) VALUES (6, 'Megha', 23, 'A', 'Surat');
+INSERT INTO students (id, name, age, grade, city) VALUES (7, 'Neha', 24, 'A', 'Mumbai');
+INSERT INTO students (id, name, age, grade, city) VALUES (8, 'Rohit', 20, 'B', 'Indore');
+INSERT INTO students (id, name, age, grade, city) VALUES (9, 'Vikas', 21, 'C', 'Pune');
+INSERT INTO students (id, name, age, grade, city) VALUES (10, 'Simran', 22, 'A', 'Delhi');
+
+Query 5 — Display All Students
+SELECT * FROM students;
+
+Query 6 — Select Student Fields
+SELECT name, grade FROM students;
+
+Query 7 — Find Student By ID
+SELECT * FROM students WHERE id = 3;
+
+Query 8 — Filter By Grade
+SELECT * FROM students WHERE grade = 'A' ALLOW FILTERING;
+
+Query 9 — Update Student City
+UPDATE students SET city = 'Bangalore' WHERE id = 2;
+SELECT * FROM students WHERE id = 2;
+
+Query 10 — Delete City Field
+DELETE city FROM students WHERE id = 8;
+SELECT * FROM students WHERE id = 8;
+
+Query 11 — Delete Student Row
+DELETE FROM students WHERE id = 4;
+SELECT * FROM students;
+
+Query 12 — Count Student Records
+SELECT COUNT(*) FROM students;
+
+Query 13 — Add Email Column
+ALTER TABLE students ADD email text;
+DESCRIBE TABLE students;
+
+Query 14 — Remove Email Column
+ALTER TABLE students DROP email;
+DESCRIBE TABLE students;
+
+Query 15 — Clear Student Table
+TRUNCATE students;
+SELECT * FROM students;
+
+Query 16 — Drop Student Table
+DROP TABLE students;
+DESCRIBE TABLES;
+
+Query 17 — Drop Keyspace
+DROP KEYSPACE mydb;
+DESCRIBE KEYSPACES;
+
+Query 18 — Exit Cassandra Shell
+exit;

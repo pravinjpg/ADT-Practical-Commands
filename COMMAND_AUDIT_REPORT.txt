@@ -1,0 +1,46 @@
+COMMAND AUDIT — ORIGINAL JOURNAL VS PRACTICAL FOLDERS
+======================================================
+
+Source reviewed: ADT_Practical_Journal_Simple(2).docx (135-page image-heavy journal)
+Compared against: the 12 practical folders and their Setup_and_Commands.txt files.
+
+CONFIRMED MISMATCHES FOUND AND CORRECTED IN THIS ZIP
+
+1. Practical 1 — Query 1
+   - Folder had: CREATE DATABASE labdb;
+   - Source shows: CREATE DATABASE Labdb;
+   - Updated to preserve the source capitalization.
+
+2. Practical 3 — Query 6 label
+   - Folder called it “Display Employee History”.
+   - Source section is “Check Data”; command itself was already the same.
+   - Updated the short description only.
+
+3. Practical 6.2 — Apache Cassandra CRUD
+   - The folder had omitted the source's Query 4 INSERT block (10 student records).
+   - As a result, later query numbers and descriptions were shifted.
+   - Restored Query 4 with the 10 INSERT statements from the source and realigned
+     Queries 5–18 to the original journal's numbering and commands.
+   - Included the source's follow-up SELECT/DESCRIBE statements where shown.
+
+4. Practical 8.3 — CouchDB
+   - Setup container name was “couchdb”; source specifies “couchdbDB”.
+   - Record 6 (Raj, Thane) had marks 82 in the folder; source specifies marks 81.
+   - Both have been corrected.
+
+REVIEW NOTES
+
+- Practical 5 (PostGIS): the source itself jumps from Query 4 to Query 7; the folder
+  preserves that numbering. Queries 5 and 6 are not present in the source pages reviewed,
+  so they were not invented.
+- Practical 6.1 (HBase): Query 14 repeats the same `alter 'college:students', 'personal'`
+  command as Query 13 in the source. The folder preserves the source rather than silently
+  substituting a different command.
+- Practical 8.2 (Cassandra indexing/ordering): the folder's keyspace/table/index workflow
+  matches the source's main sequence. The source journal also contains a repeated version
+  of this practical later in the document; the folder follows the primary sequence beginning
+  on source page 56.
+- Other practical command blocks were checked against the visible source pages. No additional
+  clear command-text mismatch was identified in this pass. Because the journal is image-based,
+  some punctuation and tiny characters are difficult to distinguish; this is a source comparison,
+  not a live execution test of every database command.

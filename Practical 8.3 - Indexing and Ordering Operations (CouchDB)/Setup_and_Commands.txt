@@ -1,0 +1,67 @@
+Practical 8.3 — Indexing and Ordering Operations (CouchDB)
+==========================================================
+
+INSTALLATION & SETUP
+1. Open Docker and check the running status.
+2. Open PowerShell as administrator.
+3. Start CouchDB:
+docker run -d --name couchdbDB -p 5984:5984 -e COUCHDB_USER=admin -e COUCHDB_PASSWORD=admin couchdb
+Check whether the CouchDB container is running:
+docker ps
+Check CouchDB status:
+curl http://localhost:5984/
+Open CouchDB Fauxton in browser:
+http://localhost:5984/_utils/
+Login using: Username: admin; Password: admin
+4. Run the queries.
+
+COMMANDS / QUERIES
+
+Query 1 — Create Database
+curl -X PUT http://admin:admin@localhost:5984/collegedb
+
+Query 2 — Insert Student Records
+curl -X POST http://admin:admin@localhost:5984/collegedb -H "Content-Type: application/json" -d '{"roll_no":1,"name":"Aarav","city":"Mumbai","marks":85}'
+curl -X POST http://admin:admin@localhost:5984/collegedb -H "Content-Type: application/json" -d '{"roll_no":2,"name":"Simran","city":"Pune","marks":92}'
+curl -X POST http://admin:admin@localhost:5984/collegedb -H "Content-Type: application/json" -d '{"roll_no":3,"name":"Rohan","city":"Nashik","marks":78}'
+curl -X POST http://admin:admin@localhost:5984/collegedb -H "Content-Type: application/json" -d '{"roll_no":4,"name":"Priya","city":"Mumbai","marks":88}'
+curl -X POST http://admin:admin@localhost:5984/collegedb -H "Content-Type: application/json" -d '{"roll_no":5,"name":"Neha","city":"Pune","marks":95}'
+curl -X POST http://admin:admin@localhost:5984/collegedb -H "Content-Type: application/json" -d '{"roll_no":6,"name":"Raj","city":"Thane","marks":81}'
+curl -X POST http://admin:admin@localhost:5984/collegedb -H "Content-Type: application/json" -d '{"roll_no":7,"name":"Karan","city":"Pune","marks":90}'
+curl -X POST http://admin:admin@localhost:5984/collegedb -H "Content-Type: application/json" -d '{"roll_no":8,"name":"Isha","city":"Nashik","marks":83}'
+curl -X POST http://admin:admin@localhost:5984/collegedb -H "Content-Type: application/json" -d '{"roll_no":9,"name":"Anaya","city":"Mumbai","marks":76}'
+curl -X POST http://admin:admin@localhost:5984/collegedb -H "Content-Type: application/json" -d '{"roll_no":10,"name":"Yash","city":"Pune","marks":89}'
+curl -X POST http://admin:admin@localhost:5984/collegedb -H "Content-Type: application/json" -d '{"roll_no":11,"name":"Dev","city":"Thane","marks":84}'
+curl -X POST http://admin:admin@localhost:5984/collegedb -H "Content-Type: application/json" -d '{"roll_no":12,"name":"Meera","city":"Pune","marks":91}'
+curl -X POST http://admin:admin@localhost:5984/collegedb -H "Content-Type: application/json" -d '{"roll_no":13,"name":"Riya","city":"Nashik","marks":80}'
+curl -X POST http://admin:admin@localhost:5984/collegedb -H "Content-Type: application/json" -d '{"roll_no":14,"name":"Kabir","city":"Mumbai","marks":82}'
+curl -X POST http://admin:admin@localhost:5984/collegedb -H "Content-Type: application/json" -d '{"roll_no":15,"name":"Sahil","city":"Pune","marks":87}'
+curl -X POST http://admin:admin@localhost:5984/collegedb -H "Content-Type: application/json" -d '{"roll_no":16,"name":"Tara","city":"Nashik","marks":77}'
+curl -X POST http://admin:admin@localhost:5984/collegedb -H "Content-Type: application/json" -d '{"roll_no":17,"name":"Nikhil","city":"Mumbai","marks":93}'
+curl -X POST http://admin:admin@localhost:5984/collegedb -H "Content-Type: application/json" -d '{"roll_no":18,"name":"Aditi","city":"Pune","marks":86}'
+curl -X POST http://admin:admin@localhost:5984/collegedb -H "Content-Type: application/json" -d '{"roll_no":19,"name":"Onkar","city":"Thane","marks":79}'
+curl -X POST http://admin:admin@localhost:5984/collegedb -H "Content-Type: application/json" -d '{"roll_no":20,"name":"Sneha","city":"Mumbai","marks":94}'
+
+Query 3 — Display All Records
+curl -X POST http://admin:admin@localhost:5984/collegedb/_find -H "Content-Type: application/json" -d '{"selector":{}}'
+
+Query 4 — Create City Index
+curl -X POST http://admin:admin@localhost:5984/collegedb/_index -H "Content-Type: application/json" -d '{"index":{"fields":["city"]},"name":"city_index","type":"json"}'
+
+Query 5 — View Existing Indexes
+curl -X GET http://admin:admin@localhost:5984/collegedb/_index
+
+Query 6 — Find Mumbai Students
+curl -X POST http://admin:admin@localhost:5984/collegedb/_find -H "Content-Type: application/json" -d '{"selector":{"city":"Mumbai"},"use_index":"city_index"}'
+
+Query 7 — Create Descending Index
+curl -X POST http://admin:admin@localhost:5984/collegedb/_index -H "Content-Type: application/json" -d '{"index":{"fields":[{"marks":"desc"}]},"name":"marks_desc_index","type":"json"}'
+
+Query 8 — Sort Marks Descending
+curl -X POST http://admin:admin@localhost:5984/collegedb/_find -H "Content-Type: application/json" -d '{"selector":{"marks":{"$gte":0}},"sort":[{"marks":"desc"}],"use_index":"marks_desc_index"}'
+
+Query 9 — Create Ascending Index
+curl -X POST http://admin:admin@localhost:5984/collegedb/_index -H "Content-Type: application/json" -d '{"index":{"fields":[{"marks":"asc"}]},"name":"marks_asc_index","type":"json"}'
+
+Query 10 — Verify Ascending Order
+curl -X POST http://admin:admin@localhost:5984/collegedb/_find -H "Content-Type: application/json" -d '{"selector":{"marks":{"$gte":0}},"sort":[{"marks":"asc"}],"use_index":"marks_asc_index"}'

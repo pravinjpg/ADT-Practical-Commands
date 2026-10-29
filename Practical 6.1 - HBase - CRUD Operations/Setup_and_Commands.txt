@@ -1,0 +1,103 @@
+Practical 6.1 — HBase - CRUD Operations
+=======================================
+
+INSTALLATION & SETUP
+Install Docker Desktop for Windows from https://docs.docker.com/get-started/get-docker/ and complete sign-up/verification, then restart the system.
+Open PowerShell as Administrator and start the HBase container: docker run -d --name hbase -p 2181:2181 -p 16010:16010 -p 9090:9090 harisekhon/hbase
+Check the status: docker ps
+Open the HBase shell: docker exec -it hbase hbase shell
+
+COMMANDS / QUERIES
+
+Query 1 — Create HBase Namespace
+create_namespace 'college'
+
+Query 2 — List Namespaces
+list_namespace
+
+Query 3 — Configure Namespace
+alter_namespace 'college', {METHOD => 'set', 'PROPERTY_NAME' => 'college'}
+
+Query 4 — Create Student Table
+create 'college:students', 'info', 'academic'
+
+Query 5 — List HBase Tables
+list
+
+Query 6 — Insert Student Records
+put 'college:students', '1', 'info:name', 'Pranay'
+put 'college:students', '1', 'info:gender', 'Male'
+put 'college:students', '1', 'academic:course', 'MScCS'
+put 'college:students', '1', 'academic:marks', '85'
+put 'college:students', '2', 'info:name', 'Riya'
+put 'college:students', '2', 'info:gender', 'Female'
+put 'college:students', '2', 'academic:course', 'BScIT'
+put 'college:students', '2', 'academic:marks', '78'
+put 'college:students', '3', 'info:name', 'Amit'
+put 'college:students', '3', 'info:gender', 'Male'
+put 'college:students', '3', 'academic:course', 'BScCS'
+put 'college:students', '3', 'academic:marks', '82'
+put 'college:students', '4', 'info:name', 'Sneha'
+put 'college:students', '4', 'info:gender', 'Female'
+put 'college:students', '4', 'academic:course', 'MScIT'
+put 'college:students', '4', 'academic:marks', '88'
+put 'college:students', '5', 'info:name', 'Rohit'
+put 'college:students', '5', 'info:gender', 'Male'
+put 'college:students', '5', 'academic:course', 'BCom'
+put 'college:students', '5', 'academic:marks', '75'
+put 'college:students', '6', 'info:name', 'Kiran'
+put 'college:students', '6', 'info:gender', 'Female'
+put 'college:students', '6', 'academic:course', 'MCA'
+put 'college:students', '6', 'academic:marks', '90'
+put 'college:students', '7', 'info:name', 'Nikhil'
+put 'college:students', '7', 'info:gender', 'Male'
+put 'college:students', '7', 'academic:course', 'MBA'
+put 'college:students', '7', 'academic:marks', '80'
+put 'college:students', '8', 'info:name', 'Pooja'
+put 'college:students', '8', 'info:gender', 'Female'
+put 'college:students', '8', 'academic:course', 'MScCS'
+put 'college:students', '8', 'academic:marks', '92'
+put 'college:students', '9', 'info:name', 'Raj'
+put 'college:students', '9', 'info:gender', 'Male'
+put 'college:students', '9', 'academic:course', 'BScIT'
+put 'college:students', '9', 'academic:marks', '70'
+put 'college:students', '10', 'info:name', 'Asha'
+put 'college:students', '10', 'info:gender', 'Female'
+put 'college:students', '10', 'academic:course', 'MCom'
+put 'college:students', '10', 'academic:marks', '88'
+
+Query 7 — Scan Student Table
+scan 'college:students'
+
+Query 8 — Retrieve Student Row
+get 'college:students', '3'
+
+Query 9 — Retrieve Course Value
+get 'college:students', '3', 'academic:course'
+
+Query 10 — Add Student Marks
+put 'college:students', '3', 'academic:marks', '89'
+
+Query 11 — Delete Marks Value
+delete 'college:students', '5', 'academic:marks'
+
+Query 12 — Delete Student Row
+deleteall 'college:students', '5'
+
+Query 13 — Add Column Family
+alter 'college:students', 'personal'
+
+Query 14 — Modify Column Family
+alter 'college:students', 'personal'
+
+Query 15 — Delete Column Family
+alter 'college:students', {NAME => 'personal', METHOD => 'delete'}
+
+Query 16 — Disable Student Table
+disable 'college:students'
+
+Query 17 — Drop Student Table
+drop 'college:students'
+
+Query 18 — Exit HBase Shell
+exit

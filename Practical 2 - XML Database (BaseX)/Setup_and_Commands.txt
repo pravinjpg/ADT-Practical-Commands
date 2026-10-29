@@ -1,0 +1,61 @@
+Practical 2 — XML Database (BaseX)
+==================================
+
+INSTALLATION & SETUP
+Download the BaseX zip file from https://basex.org/download/
+Extract the file in the C drive.
+Open the basex folder, go to bin, and type cmd in the path bar to open Command Prompt.
+Start the BaseX CLI by running: basex.bat
+
+COMMANDS / QUERIES
+
+Query 1 — Create XML Database
+CREATE DB students
+<students>
+<student id ="1"><name>Mohan</name><age>23</age></student>
+<student id ="2"><name>Akash</name><age>22</age></student>
+<student id ="3"><name>Rohan</name><age>24</age></student>
+<student id ="4"><name>Meena</name><age>21</age></student>
+<student id ="5"><name>Sneha</name><age>25</age></student>
+<student id ="6"><name>Vikas</name><age>25</age></student>
+<student id ="7"><name>Anjali</name><age>22</age></student>
+<student id ="8"><name>Rahul</name><age>24</age></student>
+<student id ="9"><name>Neha</name><age>23</age></student>
+<student id ="10"><name>Kiran</name><age>26</age></student>
+</students>
+
+Query 2 — Open Student Database
+OPEN students
+
+Query 3 — Display All Students
+XQUERY /students
+
+Query 4 — Insert Student Record
+XQUERY insert node <student id ="11"> <name>Arjun</name> <age>20</age> </student> into /students
+
+Query 5 — Verify Inserted Record
+XQUERY /students
+
+Query 6 — Update Student Age
+XQUERY replace value of node /students/student[@id="5"]/age with "24"
+
+Query 7 — View Specific Student
+XQUERY /students/student[@id="5"]
+
+Query 8 — Delete Student Record
+XQUERY delete node /students/student[@id="3"]
+
+Query 9 — Verify Deleted Record
+XQUERY /students
+
+Query 10 — Display Student Names
+XQUERY /students/student/name
+
+Query 11 — Filter Older Students
+XQUERY /students/student[age > 23]
+
+Query 12 — Count Student Records
+XQUERY count(/students/student)
+
+Query 13 — Close XML Database
+CLOSE

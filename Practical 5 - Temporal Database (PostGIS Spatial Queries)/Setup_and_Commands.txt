@@ -1,0 +1,63 @@
+Practical 5 — Temporal Database (PostGIS Spatial Queries)
+=========================================================
+
+INSTALLATION & SETUP
+Open PowerShell as Administrator; first-time install: wsl --install (otherwise check: wsl --list --verbose; if stopped run: wsl -d Ubuntu)
+Update packages: sudo apt update && sudo apt upgrade -y
+Install Postgres-PostGIS: sudo apt install -y postgresql postgis
+Start the server: sudo service postgresql start (check: sudo service postgresql status)
+Switch to psql CLI: sudo -u postgres psql
+Create the PostGIS user and database (queries below), then log in with: psql -U gisuser -d gisdb -h localhost
+If an authentication error occurs, fix pg_hba.conf (sudo nano /etc/postgresql/16/main/pg_hba.conf) and restart: sudo service postgresql restart
+
+COMMANDS / QUERIES
+
+Query 1 — Create Database User
+CREATE USER gisuser WITH PASSWORD 'gis_pass';
+
+Query 2 — Create GIS Database
+CREATE DATABASE gisdb OWNER gisuser;
+
+Query 3 — Connect GIS Database
+\c gisdb
+
+Query 4 — Enable PostGIS Extension
+CREATE EXTENSION postgis;
+
+Query 7 — Create Places Table
+CREATE TABLE places ( id SERIAL PRIMARY KEY, name TEXT, geom GEOMETRY(Point, 4326) );
+
+Query 8 — Insert Geographic Places
+INSERT INTO places (name, geom) VALUES
+('Mumbai', ST_GeomFromText('POINT(72.8777 19.0760)', 4326)),
+('Delhi', ST_GeomFromText('POINT(77.1025 28.7041)', 4326)),
+('Bengaluru', ST_GeomFromText('POINT(77.5946 12.9716)', 4326)),
+('Hyderabad', ST_GeomFromText('POINT(78.4867 17.3850)', 4326)),
+('Chennai', ST_GeomFromText('POINT(80.2707 13.0827)', 4326)),
+('Pune', ST_GeomFromText('POINT(73.8567 18.5204)', 4326)),
+('Kolkata', ST_GeomFromText('POINT(88.3639 22.5726)', 4326)),
+('Ahmedabad', ST_GeomFromText('POINT(72.5714 23.0225)', 4326)),
+('Jaipur', ST_GeomFromText('POINT(75.7873 26.9124)', 4326)),
+('Lucknow', ST_GeomFromText('POINT(80.9462 26.8467)', 4326));
+
+Query 9 — Display All Places
+SELECT * FROM places;
+
+Query 10 — Calculate City Distance
+SELECT p1.name AS city1, p2.name AS city2, ST_Distance(p1.geom::geography, p2.geom::geography) AS distance_meters
+FROM places p1, places p2 WHERE p1.name = 'Mumbai' AND p2.name = 'Pune';
+
+Query 11 — Measure From Mumbai
+SELECT name, ST_Distance( geom::geography, ST_SetSRID(ST_MakePoint(72.8777, 19.0760),4326)::geography ) / 1000 AS distance_km FROM places;
+
+Query 12 — Find Nearby Places
+SELECT name FROM places WHERE ST_DWithin( geom::geography, ST_SetSRID(ST_MakePoint(72.8777,19.0760),4326)::geography, 100000 );
+
+Query 13 — Find Intersecting Places
+SELECT name FROM places WHERE ST_Intersects( geom, ST_GeomFromText( 'POLYGON((73.5 18.3, 74.2 18.3, 74.2 19.0, 73.5 19.0, 73.5 18.3))', 4326 ) );
+
+Query 14 — Search Within Radius
+SELECT name FROM places WHERE ST_DWithin( geom::geography, ST_GeogFromText('SRID=4326;POINT(72.8777 19.0760)'), 300000 );
+
+Query 15 — Find Nearest Place
+SELECT name, ST_Distance(geom::geography, ST_GeogFromText('SRID=4326;POINT(72.8777 19.0760)')) AS dist FROM places ORDER BY dist ASC LIMIT 1;

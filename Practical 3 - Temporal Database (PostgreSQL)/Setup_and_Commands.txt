@@ -1,0 +1,71 @@
+Practical 3 — Temporal Database (PostgreSQL)
+============================================
+
+INSTALLATION & SETUP
+Open Command Prompt and run: psql -U postgres (enter the password YOUR_PASSWORD).
+
+COMMANDS / QUERIES
+
+Query 1 — Check Connection
+\conninfo
+
+Query 2 — Create Temporal Database
+CREATE DATABASE temporal_db;
+
+Query 3 — Connect Database
+\c temporal_db
+
+Query 4 — Create Employee Table
+CREATE TABLE employees ( emp_id SERIAL PRIMARY KEY, emp_name VARCHAR(50), position VARCHAR(50), salary NUMERIC(10,2), valid_from DATE NOT NULL, valid_to DATE NOT NULL );
+
+Query 5 — Insert Employee Records
+INSERT INTO employees (emp_name, position, salary, valid_from, valid_to) VALUES
+('Rahul Sharma', 'Developer', 50000, '2025-03-01', '2025-08-31'),
+('Rahul Sharma', 'Developer', 60000, '2025-09-01', '2025-12-31'),
+('Sneha Patil', 'Tester', 40000, '2025-03-15', '2025-10-15'),
+('Amit Joshi', 'Manager', 80000, '2025-03-01', '2025-06-30'),
+('Amit Joshi', 'Manager', 85000, '2025-07-01', '2025-12-31'),
+('Kiran Deshmukh', 'Developer', 52000, '2025-04-01', '2025-12-31'),
+('Meera Kulkarni', 'Tester', 42000, '2025-03-05', '2025-09-30'),
+('Meera Kulkarni', 'Tester', 45000, '2025-10-01', '2025-12-31'),
+('Vikram Rao', 'Developer', 55000, '2025-03-01', '2025-12-31'),
+('Anita Singh', 'HR', 45000, '2025-05-01', '2025-12-31');
+
+Query 6 — Check Employee Data
+SELECT * FROM employees ORDER BY emp_name, valid_from;
+
+Query 7 — End Old Salary
+UPDATE employees SET valid_to = '2025-08-31' WHERE emp_name = 'Rahul Sharma' AND salary = 50000;
+
+Query 8 — Insert New Salary
+INSERT INTO employees (emp_name, position, salary, valid_from, valid_to) VALUES ('Rahul Sharma', 'Developer', 60000, '2025-09-01', '2025-12-31');
+
+Query 9 — End Previous Salary
+UPDATE employees SET valid_to = '2025-06-30' WHERE emp_name = 'Amit Joshi' AND salary = 80000;
+
+Query 10 — Insert Updated Salary
+INSERT INTO employees (emp_name, position, salary, valid_from, valid_to) VALUES ('Amit Joshi', 'Manager', 85000, '2025-07-01', '2025-12-31');
+
+Query 11 — End Old Salary
+UPDATE employees SET valid_to = '2025-09-30' WHERE emp_name = 'Meera Kulkarni' AND salary = 42000;
+
+Query 12 — Insert Updated Salary
+INSERT INTO employees (emp_name, position, salary, valid_from, valid_to) VALUES ('Meera Kulkarni', 'Tester', 45000, '2025-10-01', '2025-12-31');
+
+Query 13 — Expire Employee Record
+UPDATE employees SET valid_to = '2025-10-15' WHERE emp_name = 'Sneha Patil';
+
+Query 14 — Display All Employees
+SELECT * FROM employees ORDER BY emp_name, valid_from;
+
+Query 15 — Find Current Employees
+SELECT * FROM employees WHERE '2025-09-25' BETWEEN valid_from AND valid_to ORDER BY emp_name;
+
+Query 16 — View Employee History
+SELECT * FROM employees WHERE emp_name = 'Rahul Sharma' ORDER BY valid_from;
+
+Query 17 — Find Date Employees
+SELECT * FROM employees WHERE '2025-08-15' BETWEEN valid_from AND valid_to ORDER BY emp_name;
+
+Query 18 — Display Salary History
+SELECT emp_name, position, salary, valid_from, valid_to FROM employees ORDER BY emp_name, valid_from;

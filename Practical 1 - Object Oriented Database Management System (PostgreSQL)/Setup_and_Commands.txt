@@ -1,0 +1,72 @@
+Practical 1 — Object Oriented Database Management System (PostgreSQL)
+=====================================================================
+
+INSTALLATION & SETUP
+Install PostgreSQL from https://www.postgresql.org/download/windows/
+Set the password as: YOUR_PASSWORD
+Open Program Files > PostgreSQL > version (17) > bin and copy the path.
+Open Environment Variables and paste the path in System Variables > Path > New.
+Open Command Prompt and run: psql -U postgres (enter the password YOUR_PASSWORD).
+
+COMMANDS / QUERIES
+
+Query 1 — Create Database
+CREATE DATABASE Labdb;
+
+Query 2 — Connect Database
+\c labdb
+
+Query 3 — Define Person Type
+CREATE TYPE Person AS ( first_name TEXT, last_name TEXT, age INT );
+
+Query 4 — Create Name Function
+CREATE OR REPLACE FUNCTION get_full_name(p Person) RETURNS TEXT AS $$
+BEGIN RETURN p.first_name || ' ' || p.last_name; END;
+$$ LANGUAGE plpgsql;
+
+Query 5 — Create Student Table
+CREATE TABLE students ( id SERIAL PRIMARY KEY, info Person );
+
+Query 6 — Insert Student Records
+INSERT INTO students (info) VALUES
+(ROW('Rohit', 'Sharma', 23)), (ROW('Amit', 'Sharma', 22)),
+(ROW('Riya', 'Patel', 21)), (ROW('Sneha', 'Joshi', 25)),
+(ROW('Rahul', 'Kumar', 24)), (ROW('Ananya', 'Mehta', 22)),
+(ROW('Aditya', 'Gupta', 23)), (ROW('Tanya', 'Rao', 21)),
+(ROW('Karan', 'Singh', 24)), (ROW('Isha', 'Shah', 22));
+
+Query 7 — Display All Students
+SELECT * FROM students s;
+
+Query 8 — Select Student Attributes
+SELECT s.id, (s.info).first_name, (s.info).age FROM students s;
+
+Query 9 — Generate Full Names
+SELECT s.id, get_full_name(s.info) AS full_name FROM students s;
+
+Query 10 — Filter Older Students
+SELECT get_full_name(s.info), (s.info).age FROM students s WHERE (s.info).age > 23;
+
+Query 11 — Update Student Age
+UPDATE students SET info = ROW((info).first_name, (info).last_name, 26) WHERE (info).first_name = 'Sneha';
+
+Query 12 — Increase Student Ages
+UPDATE students SET info = ROW((info).first_name, (info).last_name, (info).age + 1) WHERE (info).age < 23;
+
+Query 13 — Delete Riya Record
+DELETE FROM students WHERE (info).first_name = 'Riya';
+
+Query 14 — Delete Younger Students
+DELETE FROM students WHERE (info).age < 22;
+
+Query 15 — Sort By Age
+SELECT get_full_name(s.info), (s.info).age FROM students s ORDER BY (s.info).age DESC;
+
+Query 16 — Count Older Students
+SELECT COUNT(*) FROM students WHERE (info).age > 23;
+
+Query 17 — Search Last Names
+SELECT get_full_name(s.info) FROM students s WHERE (s.info).last_name LIKE 'Sh%';
+
+Query 18 — Limit Student Results
+SELECT get_full_name(s.info), (s.info).age FROM students s ORDER BY (s.info).age LIMIT 5;

@@ -1,0 +1,94 @@
+Practical 8.2 — Indexing and Ordering Operations (Apache Cassandra)
+===================================================================
+
+INSTALLATION & SETUP
+1. Open Docker and check the running status.
+2. Open PowerShell as administrator.
+3. Start Cassandra:
+docker run -d --name cassandraDB -p 9042:9042 cassandra
+docker exec -it cassandraDB cqlsh
+4. Run the queries.
+
+COMMANDS / QUERIES
+
+Query 1 — Create Keyspace
+CREATE KEYSPACE collegeDB WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};
+USE collegeDB;
+
+Query 2 — Create Student Table
+CREATE TABLE students ( roll_no int PRIMARY KEY, name text, city text, marks int );
+
+Query 3 — Insert Student Records
+INSERT INTO students (roll_no, name, city, marks) VALUES (1, 'Aarav', 'Mumbai', 85);
+INSERT INTO students (roll_no, name, city, marks) VALUES (2, 'Simran', 'Pune', 92);
+INSERT INTO students (roll_no, name, city, marks) VALUES (3, 'Rohan', 'Nashik', 78);
+INSERT INTO students (roll_no, name, city, marks) VALUES (4, 'Priya', 'Mumbai', 88);
+INSERT INTO students (roll_no, name, city, marks) VALUES (5, 'Neha', 'Pune', 95);
+INSERT INTO students (roll_no, name, city, marks) VALUES (6, 'Raj', 'Thane', 81);
+INSERT INTO students (roll_no, name, city, marks) VALUES (7, 'Karan', 'Pune', 90);
+INSERT INTO students (roll_no, name, city, marks) VALUES (8, 'Isha', 'Nashik', 83);
+INSERT INTO students (roll_no, name, city, marks) VALUES (9, 'Anaya', 'Mumbai', 76);
+INSERT INTO students (roll_no, name, city, marks) VALUES (10, 'Yash', 'Pune', 89);
+INSERT INTO students (roll_no, name, city, marks) VALUES (11, 'Dev', 'Thane', 84);
+INSERT INTO students (roll_no, name, city, marks) VALUES (12, 'Meera', 'Pune', 91);
+INSERT INTO students (roll_no, name, city, marks) VALUES (13, 'Riya', 'Nashik', 80);
+INSERT INTO students (roll_no, name, city, marks) VALUES (14, 'Kabir', 'Mumbai', 82);
+INSERT INTO students (roll_no, name, city, marks) VALUES (15, 'Sahil', 'Pune', 87);
+INSERT INTO students (roll_no, name, city, marks) VALUES (16, 'Tara', 'Nashik', 77);
+INSERT INTO students (roll_no, name, city, marks) VALUES (17, 'Nikhil', 'Mumbai', 93);
+INSERT INTO students (roll_no, name, city, marks) VALUES (18, 'Aditi', 'Pune', 86);
+INSERT INTO students (roll_no, name, city, marks) VALUES (19, 'Onkar', 'Thane', 79);
+INSERT INTO students (roll_no, name, city, marks) VALUES (20, 'Sneha', 'Mumbai', 94);
+
+Query 4 — Display All Students
+SELECT * FROM students;
+
+Query 5 — Create City Index
+CREATE INDEX city_index ON students (city);
+
+Query 6 — View Existing Indexes
+SELECT * FROM system_schema.indexes WHERE table_name = 'students' ALLOW FILTERING;
+
+Query 7 — Find Mumbai Students
+SELECT * FROM students WHERE city = 'Mumbai';
+
+Query 8 — Create Descending Table
+CREATE TABLE student_marks (city text, roll_no int, name text, marks int, PRIMARY KEY (city, marks)) WITH CLUSTERING ORDER BY (marks DESC);
+
+Query 9 — Insert Ordering Records
+INSERT INTO student_marks (city, roll_no, name, marks) VALUES ('Mumbai', 1, 'Aarav', 85);
+INSERT INTO student_marks (city, roll_no, name, marks) VALUES ('Mumbai', 4, 'Priya', 88);
+INSERT INTO student_marks (city, roll_no, name, marks) VALUES ('Mumbai', 6, 'Rahul', 91);
+INSERT INTO student_marks (city, roll_no, name, marks) VALUES ('Mumbai', 17, 'Nikhil', 93);
+INSERT INTO student_marks (city, roll_no, name, marks) VALUES ('Mumbai', 20, 'Sneha', 94);
+INSERT INTO student_marks (city, roll_no, name, marks) VALUES ('Pune', 2, 'Simran', 92);
+INSERT INTO student_marks (city, roll_no, name, marks) VALUES ('Pune', 5, 'Neha', 95);
+INSERT INTO student_marks (city, roll_no, name, marks) VALUES ('Pune', 7, 'Karan', 90);
+INSERT INTO student_marks (city, roll_no, name, marks) VALUES ('Pune', 10, 'Yash', 89);
+INSERT INTO student_marks (city, roll_no, name, marks) VALUES ('Pune', 12, 'Meera', 91);
+INSERT INTO student_marks (city, roll_no, name, marks) VALUES ('Pune', 15, 'Sahil', 87);
+INSERT INTO student_marks (city, roll_no, name, marks) VALUES ('Pune', 18, 'Aditi', 86);
+INSERT INTO student_marks (city, roll_no, name, marks) VALUES ('Nashik', 3, 'Rohan', 78);
+INSERT INTO student_marks (city, roll_no, name, marks) VALUES ('Nashik', 8, 'Isha', 83);
+INSERT INTO student_marks (city, roll_no, name, marks) VALUES ('Nashik', 13, 'Riya', 80);
+INSERT INTO student_marks (city, roll_no, name, marks) VALUES ('Nashik', 16, 'Tara', 77);
+INSERT INTO student_marks (city, roll_no, name, marks) VALUES ('Thane', 6, 'Raj', 81);
+INSERT INTO student_marks (city, roll_no, name, marks) VALUES ('Thane', 11, 'Dev', 84);
+INSERT INTO student_marks (city, roll_no, name, marks) VALUES ('Thane', 19, 'Onkar', 79);
+
+Query 10 — Display Ordered Records
+SELECT * FROM student_marks;
+
+Query 11 — View Mumbai Ordering
+SELECT * FROM student_marks WHERE city = 'Mumbai';
+
+Query 12 — Create Ascending Table
+CREATE TABLE student_marks_asc (city text, roll_no int, name text, marks int, PRIMARY KEY (city, marks)) WITH CLUSTERING ORDER BY (marks ASC);
+
+Query 13 — Insert Ascending Records
+INSERT INTO student_marks_asc (city, roll_no, name, marks) VALUES ('Mumbai', 1, 'Aarav', 85);
+INSERT INTO student_marks_asc (city, roll_no, name, marks) VALUES ('Mumbai', 4, 'Priya', 88);
+INSERT INTO student_marks_asc (city, roll_no, name, marks) VALUES ('Mumbai', 6, 'Rahul', 91);
+
+Query 14 — Verify Ascending Order
+SELECT * FROM student_marks_asc WHERE city = 'Mumbai';

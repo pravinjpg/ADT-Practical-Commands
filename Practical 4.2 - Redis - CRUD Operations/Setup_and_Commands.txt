@@ -1,0 +1,55 @@
+Practical 4.2 — Redis - CRUD Operations
+=======================================
+
+INSTALLATION & SETUP
+Open PowerShell as Administrator and install WSL (first time): wsl --install, then restart the PC.
+Set the user account as "admin" or "admin1" and password "YOUR_PASSWORD". Then run: sudo apt update, sudo apt upgrade -y, sudo apt install wsl
+If already installed, check with: wsl --list --verbose
+If stopped, start with: wsl -d Ubuntu
+Install Redis: sudo apt install redis-server -y
+Start Redis server: sudo service redis-server start
+Enter the Redis CLI: redis-cli
+
+COMMANDS / QUERIES
+
+Query 1 — Test Redis Connection
+ping
+
+Query 2 — Test Redis Query
+SELECT 1
+
+Query 3 — Store Student Records
+SET student:1 '{"name":"Mohan","age":20,"course":"CS"}'
+SET student:2 '{"name":"Neha","age":21,"course":"IT"}'
+SET student:3 '{"name":"Rahul","age":22,"course":"CS"}'
+SET student:4 '{"name":"Sita","age":20,"course":"IT"}'
+SET student:5 '{"name":"Amit","age":23,"course":"CS"}'
+SET student:6 '{"name":"Priya","age":21,"course":"IT"}'
+SET student:7 '{"name":"Rohan","age":22,"course":"CS"}'
+SET student:8 '{"name":"Anita","age":23,"course":"IT"}'
+SET student:9 '{"name":"Vikas","age":24,"course":"CS"}'
+SET student:10 '{"name":"Tina","age":22,"course":"IT"}'
+
+Query 4 — Retrieve Student One
+GET student:1
+
+Query 5 — Check Missing Key
+GET student:5
+
+Query 6 — Update Student Record
+SET student:3 '{"name":"Rahul","age":23,"course":"CS"}'
+
+Query 7 — Retrieve Student Three
+GET student:3
+
+Query 8 — Delete Student Key
+DEL student:7
+
+Query 9 — List All Keys
+KEYS *
+
+Query 10 — Clear Current Database
+FLUSHDB
+
+Query 11 — Clear All Databases
+FLUSHALL

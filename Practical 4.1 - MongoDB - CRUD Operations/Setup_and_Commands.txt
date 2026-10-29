@@ -1,0 +1,73 @@
+Practical 4.1 — MongoDB - CRUD Operations
+=========================================
+
+INSTALLATION & SETUP
+Download MongoDB Community Server (MSI): https://fastdl.mongodb.org/windows/mongodb-windows-x86_64-8.2.0-signed.msi
+Install it: Next > Accept & Next > Complete > Next > Install.
+Download Mongosh (ZIP): https://downloads.mongodb.com/compass/mongosh-2.5.8-win32-x64.zip
+Extract the folder and add its bin folder path to the System Variable (Path).
+Open PowerShell as Administrator and run: mongosh
+
+COMMANDS / QUERIES
+
+Query 1 — Select Database
+use mycollege
+
+Query 2 — Show Current Database
+db
+
+Query 3 — Create Students Collection
+db.createCollection("students")
+
+Query 4 — Insert Student Records
+db.students.insertMany([
+{ roll: 1, name: "Rohan", age: 23, course: "MSc CS" },
+{ roll: 2, name: "Shravani", age: 22, course: "BSc IT" },
+{ roll: 3, name: "Meera", age: 24, course: "MCA" },
+{ roll: 4, name: "Amit", age: 21, course: "BSc CS" },
+{ roll: 5, name: "Neha", age: 25, course: "MBA" },
+{ roll: 6, name: "Rohit", age: 23, course: "MSc Math" },
+{ roll: 7, name: "Pooja", age: 22, course: "MCom" },
+{ roll: 8, name: "Kiran", age: 24, course: "MSc CS" },
+{ roll: 9, name: "Sahil", age: 21, course: "BCA" },
+{ roll: 10, name: "Anjali", age: 23, course: "BSc IT" }
+]);
+
+Query 5 — List Databases
+show dbs
+
+Query 6 — List Collections
+show collections
+
+Query 7 — Display Student Records
+db.students.find()
+
+Query 8 — Format Student Records
+db.students.find().pretty()
+
+Query 9 — Filter By Age
+db.students.find({ age: { $gt: 22 } })
+
+Query 10 — Update One Student
+db.students.updateOne( { roll: 1 }, { $set: { course: "AI & ML" } } )
+
+Query 11 — Update Multiple Students
+db.students.updateMany( { age: 22 }, { $set: { course: "Data Science" } } )
+
+Query 12 — Delete One Student
+db.students.deleteOne({ roll: 10 })
+
+Query 13 — Delete Younger Students
+db.students.deleteMany({ age: { $lt: 23 } })
+
+Query 14 — View One Student
+db.students.findOne()
+
+Query 15 — Add Grade Field
+db.students.updateMany( {}, { $set: { grade: "Pending" } } )
+
+Query 16 — Drop Students Collection
+db.students.drop()
+
+Query 17 — Drop Current Database
+db.dropDatabase()
